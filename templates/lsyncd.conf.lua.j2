@@ -1,0 +1,39 @@
+settings {
+  statusFile = "{{ lsyncd_status_file }}",
+  logfile = "{{ lsyncd_status_logfile }}",
+  nodaemon = false,
+}
+
+{% for item in __lsyncd_sync_conf_all %}
+{%   set src_hosts  = item.src_hosts  | default(lsyncd_hosts) -%}
+{%   set targets    = item.targets    | default(lsyncd_targets) -%}
+{%   set rsync_opts = item.rsync_opts | default(lsyncd_rsync_opts_default) -%}
+{%   if inventory_hostname in src_hosts %}
+--- {{ item.comment | default(item.module_name) }} ---
+{%     for target_host in targets %}
+{%       if target_host in groups.all -%}
+{%         set target_host = ([target_host] | map('extract', hostvars, 'local_ipv4') | list)[0] -%}
+{%       endif -%}
+{%       if target_host != local_ipv4 -%}
+sync {
+  default.rsync,
+  delay = 0,
+  source = "{{ item.sync_src }}",
+  target = "{{ target_host }}::{{ item.module_name }}",
+  exclude = { "{{ item.excludes | join('", "') }}" },
+  delete = "{{ item.sync_delete }}",
+  {% if not item.sync_init -%}
+  init = false,
+  {% endif -%}
+  rsync = {
+{%       for k,v in rsync_opts.items() %}
+    {{ k }} = {{ v }},
+{%       endfor %}
+  }
+}
+{%       endif %}
+
+{%     endfor %}
+{%   endif %}
+
+{% endfor %}
