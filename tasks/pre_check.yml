@@ -1,0 +1,37 @@
+---
+# tasks/pre_check.yml (lsyncd)
+# Prefix : lsyncd
+
+- name: Check for deleted variables
+  shell: >-
+    echo "[WARNING]: 以下の変数は削除されました. 以下の URL を確認してください. @y_hashida";
+    echo "    https://github.com/link-u/ansible-roles-v2_lsyncd/blob/master/README.md#削除された変数の一覧";
+    {% if rsyncd_hosts is defined %}
+      echo "rsyncd_hosts";
+    {% endif %}
+
+    {% if rsyncd_ufw_allow_from is defined %}
+      echo "rsyncd_ufw_allow_from";
+    {% endif %}
+  register: __lsyncd_check_deleted_vars
+  check_mode: no
+  changed_when:
+    - (__lsyncd_check_deleted_vars.stdout_lines | length) != 2
+  notify: "Print warning for lsyncd (Check for deleted variables)"
+
+- name: Check for changed variables
+  shell: >-
+    echo "[WARNING]: 以下の変数は将来変更される予定です. 以下のように修正を推奨します. @y_hashida";
+    echo "    https://github.com/link-u/ansible-roles-v2_lsyncd/blob/master/README.md#変更された変数の一覧";
+    {% if lsyncd_sync_conf_defaults is defined %}
+      echo "lsyncd_sync_conf_defaults → lsyncd_sync_conf";
+    {% endif %}
+
+    {% if lsyncd_sync_conf_by_hostname is defined %}
+      echo "lsyncd_sync_conf_by_hostname → lsyncd_sync_conf_by_src_host";
+    {% endif %}
+  register: __lsyncd_check_changed_vars
+  check_mode: no
+  changed_when:
+    - (__lsyncd_check_changed_vars.stdout_lines | length) != 2
+  notify: "Print warning for lsyncd (Check for changed variables)"

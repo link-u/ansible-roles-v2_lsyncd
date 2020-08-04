@@ -1,0 +1,40 @@
+---
+# tasks/configure.yml (lsyncd)
+# Prefix : lsyncd
+
+- name: Make lsyncd dir
+  file:
+    path: "/etc/lsyncd"
+    state: "directory"
+    mode: "0755"
+
+- name: Set lsyncd config
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: "lsyncd.conf.lua.j2"
+      dest: "/etc/lsyncd/lsyncd.conf.lua"
+  notify: Restart lsyncd
+
+- name: Start lsyncd
+  systemd:
+    name: lsyncd.service
+    state: started
+    enabled: yes
+
+- name: Check if logrotate is installed
+  shell: dpkg-query -s logrotate > /dev/null 2>&1; echo $?
+  register: _dpkg_check_installed_logrotate
+  changed_when: False
+  check_mode: no
+
+- name: Setup logrotate.d scripts
+  template:
+    src: logrotate.d.j2
+    dest: "{{ logrotate_conf_dir }}{{ item.name }}"
+  loop: "{{ lsyncd_logrotate_scripts }}"
+  when:
+    - lsyncd_use_logrotate | bool
+    - _dpkg_check_installed_logrotate.stdout == "0"

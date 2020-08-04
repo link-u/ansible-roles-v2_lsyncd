@@ -1,0 +1,18 @@
+---
+
+- name: Restart lsyncd
+  service:
+    name: lsyncd
+    state: restarted
+
+- name: "Print warning for lsyncd (Check for deleted variables)"
+  debug:
+    msg: "{{ __lsyncd_check_deleted_vars.stdout_lines }}"
+  failed_when: yes
+  ignore_errors: yes
+
+- name: "Print warning for lsyncd (Check for changed variables)"
+  debug:
+    msg: "{{ __lsyncd_check_changed_vars.stdout_lines }}"
+  failed_when: yes
+  ignore_errors: yes

@@ -1,0 +1,10 @@
+---
+# tasks/install.yml (lsyncd)
+# Prefix : lsyncd
+
+- name: Install lsyncd
+  apt:
+    name:
+      - lsyncd
+      - rsync
+    update_cache: yes
