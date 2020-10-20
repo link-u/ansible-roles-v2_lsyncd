@@ -1,5 +1,7 @@
 # lsyncd
 
+![ansible ci](https://github.com/link-u/ansible-roles-v2_lsyncd/workflows/ansible%20ci/badge.svg)
+
 ## 概要
 
 この role では以下の2項目ができる.
