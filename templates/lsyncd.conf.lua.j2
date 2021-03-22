@@ -17,7 +17,7 @@ settings {
 {%       if target_host != local_ipv4 -%}
 sync {
   default.rsync,
-  delay = 0,
+  delay = {{ item.delay | default(0) }},
   source = "{{ item.sync_src }}",
   target = "{{ target_host }}::{{ item.module_name }}",
   exclude = { "{{ item.excludes | join('", "') }}" },

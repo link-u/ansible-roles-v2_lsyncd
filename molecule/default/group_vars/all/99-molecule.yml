@@ -1,0 +1,28 @@
+__local_ipv4s: >-
+  {{ (group_names | map('extract', groups) | list)[0] |
+      map('extract', hostvars, 'local_ipv4') | list }}
+
+# ※ 自身を除いたホスト一覧
+lsyncd_hosts: "{{ __local_ipv4s }}"
+lsyncd_targets: "{{ __local_ipv4s | difference(local_ipv4) }}"
+
+# 3台相互同期
+lsyncd_sync_conf:
+  - sync_src: /var/data_1
+    delay: 10
+    module_name: data_1
+    excludes:
+      - ".*"
+      - "lost+found"
+    sync_delete: running
+    sync_init: true
+    comment: "data_1 ディレクトリの3台相互同期 (delay = 10)"
+
+  - sync_src: /var/data_2
+    module_name: data_2
+    excludes:
+      - ".*"
+      - "lost+found"
+    sync_delete: running
+    sync_init: true
+    comment: "data_2 ディレクトリの3台相互同期"
