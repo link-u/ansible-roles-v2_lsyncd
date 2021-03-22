@@ -32,6 +32,7 @@ lsyncd_sync_conf: "{{ lsyncd_sync_conf_defaults | default([]) }}"
 #      - "lost+found"
 #    sync_delete: "running"
 #    sync_init: false
+#    delay: 0                         # ※ オプション. 必須ではない. default value = 0
 #    src_hosts: "{{ lsyncd_hosts }}"  # ※ オプション. 必須ではない.
 #    targets: "{{ lsyncd_targets }}"  # ※ オプション. 必須ではない.
 #    rsync_opts:                      # ※ オプション. 必須ではない.

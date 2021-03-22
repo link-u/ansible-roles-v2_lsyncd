@@ -63,6 +63,7 @@ lsyncd_sync_conf: []
 #      - "lost+found"
 #    sync_delete: "running"
 #    sync_init: false
+#    delay: 0                         # ※ オプション. 必須ではない. default value = 0
 #    src_hosts: "{{ lsyncd_hosts }}"  # ※ オプション. 必須ではない.
 #    targets: "{{ lsyncd_targets }}"  # ※ オプション. 必須ではない.
 #    rsync_opts:                      # ※ オプション. 必須ではない.
@@ -94,6 +95,7 @@ lsyncd_sync_conf_by_target: {}
 #        - "lost+found"
 #      sync_delete: "running"
 #      sync_init: false
+#      delay: 0                         # ※ オプション. 必須ではない. default value = 0
 #      src_hosts: "{{ lsyncd_hosts }}"  # ※ オプション. 必須ではない. デフォルトは lsyncd_hosts
 #      rsync_opts:                      # ※ オプション. 必須ではない. デフォルトは 記述している通り.
 #        archive: "true"
@@ -121,6 +123,7 @@ lsyncd_sync_conf_by_src_host: {}
 #        - "lost+found"
 #      sync_delete: "running"
 #      sync_init: false
+#      delay: 0                         # ※ オプション. 必須ではない. default value = 0
 #      targets: "{{ lsyncd_targets }}"  # ※ オプション. 必須ではない.
 #      rsync_opts:                      # ※ オプション. 必須ではない. デフォルトは 記述している通り.
 #        archive: "true"
